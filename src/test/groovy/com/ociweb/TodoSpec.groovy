@@ -8,15 +8,10 @@ import spock.lang.Specification
  */
 @TestFor(Todo)
 class TodoSpec extends Specification {
-
-    def setup() {
-    }
-
-    def cleanup() {
-    }
-
-    void "test something"() {
-        expect:"fix me"
-            true == false
-    }
+  def setup() {}
+  def cleanup() {}
+  void "test something"() {
+    expect:"fix me"
+    true == false
+  }
 }
