@@ -1,7 +1,5 @@
 # grails-reactjs
 
-## Installation
-
 Getting Started
 ---------------
 ```bash
