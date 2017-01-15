@@ -21496,7 +21496,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -21522,230 +21522,218 @@
 	__webpack_require__(182);
 
 	var App = function (_React$Component) {
-	    _inherits(App, _React$Component);
+	  _inherits(App, _React$Component);
 
-	    function App() {
-	        _classCallCheck(this, App);
+	  function App() {
+	    _classCallCheck(this, App);
 
-	        var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this));
+	    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this));
 
-	        _this.state = {
-	            todoLists: [],
-	            todoList: null,
+	    _this.state = {
+	      todoLists: [],
+	      todoList: null,
+	      newTodoText: '',
+	      newTodoList: ''
+	    };
+	    return _this;
+	  }
 
-	            newTodoText: '',
-	            newTodoList: ''
-	        };
-	        return _this;
+	  _createClass(App, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.loadLists();
 	    }
+	  }, {
+	    key: 'loadLists',
+	    value: function loadLists() {
+	      var _this2 = this;
 
-	    _createClass(App, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            this.loadLists();
-	        }
-	    }, {
-	        key: 'loadLists',
-	        value: function loadLists() {
-	            var _this2 = this;
+	      fetch('/todoList/', {
+	        method: 'GET'
+	      }).then(function (response) {
+	        return response.json();
+	      }).then(function (json) {
+	        console.log(json);
+	        _this2.setState({ 'todoLists': json });
+	      });
+	    }
+	  }, {
+	    key: 'saveTodo',
+	    value: function saveTodo(event) {
+	      var _this3 = this;
 
-	            fetch('/todoList/', {
-	                method: 'GET'
-	            }).then(function (response) {
-	                return response.json();
-	            }).then(function (json) {
-	                console.log(json);
-	                _this2.setState({ 'todoLists': json });
-	            });
-	        }
-	    }, {
-	        key: 'saveTodo',
-	        value: function saveTodo(event) {
-	            var _this3 = this;
-
-	            event.preventDefault();
-
-	            if (this.state.newTodoText) {
-
-	                fetch('/api/todos', {
-	                    method: 'POST',
-	                    headers: {
-	                        Accept: 'application/json',
-	                        'Content-Type': 'application/json'
-	                    },
-	                    body: JSON.stringify({
-	                        name: this.state.newTodoText,
-	                        complete: false,
-	                        todoList: { id: this.state.todoList.id }
-	                    })
-	                }).then(function (response) {
-	                    return response.json();
-	                }).then(function (json) {
-
-	                    _this3.setState({ newTodoText: '' });
-	                    _this3.loadList(json.todoList.id);
-	                });
+	      event.preventDefault();
+	      if (this.state.newTodoText) {
+	        fetch('/api/todos', {
+	          method: 'POST',
+	          headers: {
+	            Accept: 'application/json',
+	            'Content-Type': 'application/json'
+	          },
+	          body: JSON.stringify({
+	            name: this.state.newTodoText,
+	            complete: false,
+	            todoList: {
+	              id: this.state.todoList.id
 	            }
-	        }
-	    }, {
-	        key: 'updateNewTodoText',
-	        value: function updateNewTodoText(event) {
-	            this.setState({ newTodoText: event.target.value });
-	        }
-	    }, {
-	        key: 'saveTodoList',
-	        value: function saveTodoList(event) {
-	            var _this4 = this;
+	          })
+	        }).then(function (response) {
+	          return response.json();
+	        }).then(function (json) {
+	          _this3.setState({ newTodoText: '' });
+	          _this3.loadList(json.todoList.id);
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'updateNewTodoText',
+	    value: function updateNewTodoText(event) {
+	      this.setState({ newTodoText: event.target.value });
+	    }
+	  }, {
+	    key: 'saveTodoList',
+	    value: function saveTodoList(event) {
+	      var _this4 = this;
 
-	            event.preventDefault();
+	      event.preventDefault();
+	      if (this.state.newTodoList) {
+	        fetch('/api/todoList', {
+	          method: 'POST',
+	          headers: {
+	            Accept: 'application/json',
+	            'Content-Type': 'application/json'
+	          },
+	          body: JSON.stringify({
+	            name: this.state.newTodoList
+	          })
+	        }).then(function (response) {
+	          return response.json();
+	        }).then(function (json) {
+	          _this4.setState({ newTodoList: '' });
+	          _this4.loadLists();
+	          _this4.loadList(json.id);
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'newTodoList',
+	    value: function newTodoList(event) {
+	      this.setState({ newTodoList: event.target.value });
+	    }
+	  }, {
+	    key: 'loadList',
+	    value: function loadList(id) {
+	      var _this5 = this;
 
-	            if (this.state.newTodoList) {
+	      fetch('/api/todoList/' + id, {
+	        method: 'GET'
+	      }).then(function (response) {
+	        return response.json();
+	      }).then(function (json) {
+	        _this5.setState({ todoList: json });
+	      });
+	    }
+	  }, {
+	    key: 'selectList',
+	    value: function selectList(event) {
+	      this.loadList(event.target.id);
+	    }
+	  }, {
+	    key: 'toggleComplete',
+	    value: function toggleComplete(event) {
+	      var _this6 = this;
 
-	                fetch('/api/todoList', {
-	                    method: 'POST',
-	                    headers: {
-	                        Accept: 'application/json',
-	                        'Content-Type': 'application/json'
-	                    },
-	                    body: JSON.stringify({
-	                        name: this.state.newTodoList
-	                    })
-	                }).then(function (response) {
-	                    return response.json();
-	                }).then(function (json) {
+	      console.log('toggleComplete!');
+	      console.log(event.target.id);
+	      var todo = this.state.todoList.todos.find(function (todo) {
+	        return todo.id === Number(event.target.id);
+	      });
+	      if (todo) {
+	        console.log(todo);
+	        var toggledComplete = !todo.complete;
+	        fetch('/api/todos/' + event.target.id, {
+	          method: 'PUT',
+	          headers: {
+	            Accept: 'application/json',
+	            'Content-Type': 'application/json'
+	          },
+	          body: JSON.stringify({
+	            complete: toggledComplete
+	          })
+	        }).then(function (response) {
+	          return response.json();
+	        }).then(function (json) {
+	          _this6.loadList(json.todoList.id);
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      //For a thorough explanation regarding the use bind() in Javascript and React, see this link:
+	      //http://reactkungfu.com/2015/07/why-and-how-to-bind-methods-in-your-react-component-classes/
+	      var selectList = this.selectList.bind(this);
+	      var toggleComplete = this.toggleComplete.bind(this);
+	      var saveTodo = this.saveTodo.bind(this);
+	      var updateNewTodoText = this.updateNewTodoText.bind(this);
+	      var saveTodoList = this.saveTodoList.bind(this);
+	      var newTodoList = this.newTodoList.bind(this);
+	      var todoList = this.state.todoList;
 
-	                    _this4.setState({ newTodoList: '' });
-
-	                    _this4.loadLists();
-	                    _this4.loadList(json.id);
-	                });
-	            }
-	        }
-	    }, {
-	        key: 'newTodoList',
-	        value: function newTodoList(event) {
-	            this.setState({ newTodoList: event.target.value });
-	        }
-	    }, {
-	        key: 'loadList',
-	        value: function loadList(id) {
-	            var _this5 = this;
-
-	            fetch('/api/todoList/' + id, {
-	                method: 'GET'
-	            }).then(function (response) {
-	                return response.json();
-	            }).then(function (json) {
-	                _this5.setState({ todoList: json });
-	            });
-	        }
-	    }, {
-	        key: 'selectList',
-	        value: function selectList(event) {
-	            this.loadList(event.target.id);
-	        }
-	    }, {
-	        key: 'toggleComplete',
-	        value: function toggleComplete(event) {
-	            var _this6 = this;
-
-	            console.log('toggleComplete!');
-	            console.log(event.target.id);
-
-	            var todo = this.state.todoList.todos.find(function (todo) {
-	                return todo.id === Number(event.target.id);
-	            });
-	            if (todo) {
-	                console.log(todo);
-	                var toggledComplete = !todo.complete;
-
-	                fetch('/api/todos/' + event.target.id, {
-	                    method: 'PUT',
-	                    headers: {
-	                        Accept: 'application/json',
-	                        'Content-Type': 'application/json'
-	                    },
-	                    body: JSON.stringify({
-	                        complete: toggledComplete
-	                    })
-	                }).then(function (response) {
-	                    return response.json();
-	                }).then(function (json) {
-	                    _this6.loadList(json.todoList.id);
-	                });
-	            }
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-
-	            //For a thorough explanation regarding the use bind() in Javascript and React, see this link:
-	            //http://reactkungfu.com/2015/07/why-and-how-to-bind-methods-in-your-react-component-classes/
-	            var selectList = this.selectList.bind(this);
-	            var toggleComplete = this.toggleComplete.bind(this);
-
-	            var saveTodo = this.saveTodo.bind(this);
-	            var updateNewTodoText = this.updateNewTodoText.bind(this);
-
-	            var saveTodoList = this.saveTodoList.bind(this);
-	            var newTodoList = this.newTodoList.bind(this);
-
-	            var todoList = this.state.todoList;
-
-	            return _react2.default.createElement(
-	                'div',
-	                { className: 'todo-app' },
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'todo-app' },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'side-pane' },
+	          _react2.default.createElement(
+	            'h2',
+	            null,
+	            'Todo Lists'
+	          ),
+	          _react2.default.createElement(
+	            'form',
+	            { className: 'addTodoList', onSubmit: saveTodoList },
+	            _react2.default.createElement('input', {
+	              value: this.state.newTodoList,
+	              type: 'text',
+	              placeholder: 'Enter new list...',
+	              onChange: newTodoList
+	            }),
+	            _react2.default.createElement('input', { type: 'submit', value: 'Save' })
+	          ),
+	          _react2.default.createElement(
+	            'ul',
+	            null,
+	            this.state.todoLists.map(function (todoList) {
+	              return _react2.default.createElement(
+	                'li',
+	                { key: todoList.id },
 	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'side-pane' },
-	                    _react2.default.createElement(
-	                        'h2',
-	                        null,
-	                        'Todo Lists'
-	                    ),
-	                    _react2.default.createElement(
-	                        'form',
-	                        { className: 'addTodoList', onSubmit: saveTodoList },
-	                        _react2.default.createElement('input', {
-	                            value: this.state.newTodoList,
-	                            type: 'text',
-	                            placeholder: 'Enter new list...',
-	                            onChange: newTodoList
-	                        }),
-	                        _react2.default.createElement('input', { type: 'submit', value: 'Save' })
-	                    ),
-	                    _react2.default.createElement(
-	                        'ul',
-	                        null,
-	                        this.state.todoLists.map(function (todoList) {
-	                            return _react2.default.createElement(
-	                                'li',
-	                                { key: todoList.id },
-	                                _react2.default.createElement(
-	                                    'button',
-	                                    { id: todoList.id, onClick: selectList },
-	                                    'Select'
-	                                ),
-	                                todoList.name
-	                            );
-	                        })
-	                    )
+	                  'button',
+	                  { id: todoList.id, onClick: selectList },
+	                  'Select'
 	                ),
-	                _react2.default.createElement(
-	                    'div',
-	                    { className: 'main' },
-	                    todoList ? _react2.default.createElement(_todoList2.default, { name: todoList.name,
-	                        todos: todoList.todos,
-	                        toggleComplete: toggleComplete,
-	                        newTodoText: this.state.newTodoText,
-	                        updateNewTodoText: updateNewTodoText,
-	                        saveTodo: saveTodo }) : null
-	                )
-	            );
-	        }
-	    }]);
+	                todoList.name
+	              );
+	            })
+	          )
+	        ),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'main' },
+	          todoList ? _react2.default.createElement(_todoList2.default, { name: todoList.name,
+	            todos: todoList.todos,
+	            toggleComplete: toggleComplete,
+	            newTodoText: this.state.newTodoText,
+	            updateNewTodoText: updateNewTodoText,
+	            saveTodo: saveTodo }) : null
+	        )
+	      );
+	    }
+	  }]);
 
-	    return App;
+	  return App;
 	}(_react2.default.Component);
 
 	exports.default = App;
@@ -21757,7 +21745,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 
 	var _react = __webpack_require__(1);
@@ -21771,38 +21759,37 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function TodoList(props) {
-
-	    return _react2.default.createElement(
-	        'div',
-	        null,
-	        _react2.default.createElement(
-	            'h2',
-	            null,
-	            props.name
-	        ),
-	        _react2.default.createElement(
-	            'form',
-	            { className: 'addTodo', onSubmit: props.saveTodo },
-	            _react2.default.createElement('input', {
-	                value: props.newTodoText,
-	                type: 'text',
-	                placeholder: 'Enter new task...',
-	                onChange: props.updateNewTodoText
-	            }),
-	            _react2.default.createElement('input', { type: 'submit', value: 'Save' })
-	        ),
-	        _react2.default.createElement(
-	            'ul',
-	            null,
-	            props.todos.sort(function (a, b) {
-	                return a.id - b.id;
-	            }).map(function (todo) {
-	                return _react2.default.createElement(_todo2.default, { key: todo.id,
-	                    todo: todo,
-	                    toggleComplete: props.toggleComplete });
-	            })
-	        )
-	    );
+	  return _react2.default.createElement(
+	    'div',
+	    null,
+	    _react2.default.createElement(
+	      'h2',
+	      null,
+	      props.name
+	    ),
+	    _react2.default.createElement(
+	      'form',
+	      { className: 'addTodo', onSubmit: props.saveTodo },
+	      _react2.default.createElement('input', {
+	        value: props.newTodoText,
+	        type: 'text',
+	        placeholder: 'Enter new task...',
+	        onChange: props.updateNewTodoText
+	      }),
+	      _react2.default.createElement('input', { type: 'submit', value: 'Save' })
+	    ),
+	    _react2.default.createElement(
+	      'ul',
+	      null,
+	      props.todos.sort(function (a, b) {
+	        return a.id - b.id;
+	      }).map(function (todo) {
+	        return _react2.default.createElement(_todo2.default, { key: todo.id,
+	          todo: todo,
+	          toggleComplete: props.toggleComplete });
+	      })
+	    )
+	  );
 	}
 
 	var _React$PropTypes = _react2.default.PropTypes,
@@ -21811,12 +21798,12 @@
 	    func = _React$PropTypes.func;
 
 	TodoList.propTypes = {
-	    name: string,
-	    todos: array,
-	    newTodoText: string,
-	    toggleComplete: func,
-	    updateNewTodoText: func,
-	    saveTodo: func
+	  name: string,
+	  todos: array,
+	  newTodoText: string,
+	  toggleComplete: func,
+	  updateNewTodoText: func,
+	  saveTodo: func
 	};
 
 	exports.default = TodoList;
@@ -21828,7 +21815,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 
 	var _react = __webpack_require__(1);
@@ -21838,19 +21825,17 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function Todo(props) {
-
-	    var todo = props.todo;
-
-	    return _react2.default.createElement(
-	        'li',
-	        null,
-	        _react2.default.createElement('input', { id: todo.id, type: 'checkbox', checked: todo.complete ? 'checked' : '', onChange: props.toggleComplete }),
-	        _react2.default.createElement(
-	            'span',
-	            null,
-	            todo.name
-	        )
-	    );
+	  var todo = props.todo;
+	  return _react2.default.createElement(
+	    'li',
+	    null,
+	    _react2.default.createElement('input', { id: todo.id, type: 'checkbox', checked: todo.complete ? 'checked' : '', onChange: props.toggleComplete }),
+	    _react2.default.createElement(
+	      'span',
+	      null,
+	      todo.name
+	    )
+	  );
 	}
 
 	var _React$PropTypes = _react2.default.PropTypes,
@@ -21861,12 +21846,12 @@
 	    func = _React$PropTypes.func;
 
 	Todo.propTypes = {
-	    todo: shape({
-	        id: number.isRequired,
-	        name: string,
-	        complete: bool
-	    }),
-	    toggleComplete: func
+	  todo: shape({
+	    id: number.isRequired,
+	    name: string,
+	    complete: bool
+	  }),
+	  toggleComplete: func
 	};
 
 	exports.default = Todo;
@@ -22378,7 +22363,7 @@
 
 
 	// module
-	exports.push([module.id, ".todo-app  {\n    font-family: sans-serif;\n    width: 640px;\n    min-height: 480px;\n    margin: 0 auto;\n    background-color: lavender;\n    padding: 20px;\n}\n\n.side-pane {\n    float: right;\n    background-color: lavenderblush;\n    padding: 0 20px;\n    border-radius: 10px;\n}\n\n.main {\n    float: left;\n}\n", ""]);
+	exports.push([module.id, ".todo-app  {\n  font-family: sans-serif;\n  width: 640px;\n  min-height: 480px;\n  margin: 0 auto;\n  background-color: lavender;\n  padding: 20px;\n}\n\n.side-pane {\n  float: right;\n  background-color: lavenderblush;\n  padding: 0 20px;\n  border-radius: 10px;\n}\n\n.main {\n  float: left;\n}\n", ""]);
 
 	// exports
 
