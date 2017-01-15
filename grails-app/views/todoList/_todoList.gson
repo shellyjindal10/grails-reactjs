@@ -1,7 +1,4 @@
 import com.ociweb.TodoList
 
-model {
-    TodoList todoList
-}
-
+model {TodoList todoList}
 json g.render(todoList, [deep:true])
