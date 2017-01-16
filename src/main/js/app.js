@@ -158,7 +158,6 @@ class App extends React.Component {
                }) }
              </ul>
           </div>
-
           <div className="main">
             { todoList ?
               <TodoList name={ todoList.name }

@@ -1,6 +1,5 @@
 package com.ociweb
 
 class AppController {
-
-    def index() { }
+  def index() { }
 }

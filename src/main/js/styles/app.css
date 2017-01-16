@@ -6,14 +6,12 @@
   background-color: lavender;
   padding: 20px;
 }
-
 .side-pane {
   float: right;
   background-color: lavenderblush;
   padding: 0 20px;
   border-radius: 10px;
 }
-
 .main {
   float: left;
 }
